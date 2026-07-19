@@ -1,0 +1,69 @@
+{% extends "student/base_student.html" %}
+
+{% block title %}My Fines{% endblock %}
+{% block topbar_title %}My Fines{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-header-left">
+    <h1>My Fines</h1>
+    <p>Fines charged for overdue book returns.</p>
+  </div>
+</div>
+
+{% if fines %}
+<div class="stat-grid" style="grid-template-columns:1fr;max-width:300px;margin-bottom:24px">
+  <div class="stat-card">
+    <div class="stat-icon red"><i class="fas fa-file-invoice-dollar"></i></div>
+    <div>
+      <div class="stat-value">BDT. {{ "%.2f"|format(fines|sum(attribute='fine_amount')) }}</div>
+      <div class="stat-label">Total Outstanding Fines</div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<div class="card">
+  {% if fines %}
+  <div class="table-wrapper" style="border:none">
+    <table>
+      <thead>
+        <tr>
+          <th>Book</th>
+          <th>Issue Date</th>
+          <th>Due Date</th>
+          <th>Return Date</th>
+          <th class="text-center">Fine</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for f in fines %}
+        <tr>
+          <td class="fw-600">{{ f.book_title }}</td>
+          <td>{{ format_date(f.issue_date) }}</td>
+          <td>{{ format_date(f.due_date) }}</td>
+          <td>{{ format_date(f.return_date) }}</td>
+          <td class="text-center">
+            <span class="overdue-text">BDT. {{ "%.2f"|format(f.fine_amount) }}</span>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr style="background:var(--gray-50);font-weight:700">
+          <td colspan="4" style="text-align:right;padding-right:20px">Total:</td>
+          <td class="text-center overdue-text">BDT. {{ "%.2f"|format(fines|sum(attribute='fine_amount')) }}</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-state-icon"><i class="fas fa-check-circle"></i></div>
+    <div class="empty-state-title">No fines recorded</div>
+    <div class="empty-state-text">You have no outstanding fines. Keep up the good work!</div>
+    <a href="{{ url_for('student.books') }}" class="btn btn-outline"><i class="fas fa-book"></i> Browse Books</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | LibraryMS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='images/favicon-32x32.png') }}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='images/favicon-16x16.png') }}">
+  <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/apple-touch-icon.png') }}">
+</head>
+<body>
+
+<div class="auth-page">
+
+  <!-- Left panel -->
+  <div class="auth-left">
+    <div class="auth-logo">
+      <img src="{{ url_for('static', filename='images/logo.png') }}" alt="MetroLib logo" class="auth-logo-full">
+    </div>
+
+    <h3 class="auth-headline">Empowering Modern Library<br>Management</h3>
+    <p class="auth-subtext">
+      <strong>A Modern and Intelligent Digital Library Platform.</strong><br>
+      A secure and smart Library Management System developed for Metropolitan University. 
+      The platform streamlines book cataloging, borrowing, returns, fine management
+       and user administration through a centralized and user-friendly interface, 
+       enhancing efficiency for students, librarians, and administrators.
+    </p>
+
+    <div class="auth-features">
+      <div class="auth-feature">
+        <i class="fas fa-check"></i>
+        <span>Centralized Digital Book Catalog</span>
+      </div>
+      <div class="auth-feature">
+        <i class="fas fa-check"></i>
+        <span>Smart Book Issue &amp; Return Management</span>
+      </div>
+      <div class="auth-feature">
+        <i class="fas fa-check"></i>
+        <span>Secure Student, Librarian &amp; Admin Access</span>
+      </div>
+      <div class="auth-feature">
+        <i class="fas fa-check"></i>
+        <span>Detailed Reports and Borrowing History</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right panel (form) -->
+  <div class="auth-right">
+    <div class="auth-form-box">
+
+      <h2 class="auth-form-title">Welcome back</h2>
+      <p class="auth-form-sub">Sign in to your account to continue.</p>
+
+      <!-- Flash messages -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }}" style="margin-bottom:16px">
+              <i class="fas fa-{% if category == 'success' %}check-circle{% elif category == 'danger' %}exclamation-circle{% elif category == 'warning' %}exclamation-triangle{% else %}info-circle{% endif %}"></i>
+              <span>{{ message }}</span>
+              <button class="alert-close" type="button"><i class="fas fa-times"></i></button>
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <form method="POST" action="{{ url_for('auth.login') }}" autocomplete="on">
+        <div class="form-group">
+          <label class="form-label" for="username">Username</label>
+          <input
+            id="username"
+            type="text"
+            name="username"
+            class="form-control"
+            placeholder="Enter your username"
+            autocomplete="username"
+            value="{{ request.form.username or '' }}"
+            required
+            autofocus
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <div style="position:relative">
+            <input
+              id="password"
+              type="password"
+              name="password"
+              class="form-control"
+              placeholder="Enter your password"
+              autocomplete="current-password"
+              required
+              style="padding-right:40px"
+            >
+            <button
+              type="button"
+              data-toggle-password="password"
+              style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--gray-400);cursor:pointer;font-size:0.9rem"
+              aria-label="Toggle password visibility"
+            ><i class="fas fa-eye"></i></button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100" style="margin-top:8px;justify-content:center;padding:11px">
+          <i class="fas fa-sign-in-alt"></i> Sign In
+        </button>
+      </form>
+
+      <div class="auth-form-footer">
+        New student?
+        <a href="{{ url_for('student.register') }}" style="font-weight:600;color:var(--primary-600)">Create an account</a>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+// Alert close
+document.querySelectorAll('.alert-close').forEach(btn => {
+  btn.addEventListener('click', () => btn.closest('.alert')?.remove());
+});
+// Password toggle
+document.querySelectorAll('[data-toggle-password]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const t = document.getElementById(btn.dataset.togglePassword);
+    if (!t) return;
+    t.type = t.type === 'password' ? 'text' : 'password';
+    btn.innerHTML = t.type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+  });
+});
+</script>
+</body>
+</html>

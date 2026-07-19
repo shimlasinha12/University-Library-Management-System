@@ -1,0 +1,42 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Students{% endblock %}
+{% block topbar_title %}Students{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-header-left"><h1>Students</h1><p>View and manage registered students.</p></div>
+</div>
+
+<div class="card">
+  {% if students %}
+  <div class="table-wrapper" style="border:none">
+    <table>
+      <thead>
+        <tr><th>Username</th><th>Full Name</th><th>Email</th><th class="text-center">Status</th><th class="text-center" style="width:140px">Actions</th></tr>
+      </thead>
+      <tbody>
+        {% for s in students %}
+        <tr>
+          <td class="fw-600">{{ s.username }}</td>
+          <td>{{ s.full_name }}</td>
+          <td class="text-sm">{{ s.email }}</td>
+          <td class="text-center">
+            {% if s.status == 'active' %}<span class="badge badge-success">Active</span>
+            {% else %}<span class="badge badge-danger">Inactive</span>{% endif %}
+          </td>
+          <td class="text-center">
+            <a href="{{ url_for('admin.view_student', user_id=s.id) }}" class="btn btn-outline btn-icon" title="View"><i class="fas fa-eye"></i></a>
+            <button class="btn btn-danger btn-icon" data-delete-form="del-stu-{{ s.id }}" data-delete-label="student '{{ s.username }}'" title="Delete"><i class="fas fa-trash-alt"></i></button>
+            <form id="del-stu-{{ s.id }}" action="{{ url_for('admin.delete_student', user_id=s.id) }}" method="POST" style="display:none"></form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="table-empty"><i class="fas fa-user-graduate"></i><p>No students registered yet.</p></div>
+  {% endif %}
+</div>
+{% endblock %}

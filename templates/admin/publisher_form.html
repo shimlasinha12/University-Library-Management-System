@@ -1,0 +1,36 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}{{ action }} Publisher{% endblock %}
+{% block topbar_title %}{{ action }} Publisher{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-header-left"><h1>{{ action }} Publisher</h1></div>
+  <a href="{{ url_for('admin.publishers') }}" class="btn btn-outline"><i class="fas fa-arrow-left"></i> Back</a>
+</div>
+
+<div style="max-width:520px">
+  <div class="card">
+    <div class="card-body">
+      <form method="POST" action="{{ url_for('admin.add_publisher') if action == 'Add' else url_for('admin.edit_publisher', publisher_id=publisher.id) }}">
+        <div class="form-group">
+          <label class="form-label" for="name">Name <span style="color:var(--danger-600)">*</span></label>
+          <input id="name" type="text" name="name" class="form-control" value="{{ form.name or '' }}" required placeholder="Publisher name">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="address">Address</label>
+          <textarea id="address" name="address" class="form-control" rows="2" placeholder="Optional">{{ form.address or '' }}</textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="contact">Contact</label>
+          <input id="contact" type="text" name="contact" class="form-control" value="{{ form.contact or '' }}" placeholder="Phone or email">
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary"><i class="fas fa-{{ 'plus' if action == 'Add' else 'save' }}"></i> {{ action }} Publisher</button>
+          <a href="{{ url_for('admin.publishers') }}" class="btn btn-outline">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

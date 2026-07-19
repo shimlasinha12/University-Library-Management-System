@@ -1,0 +1,40 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Publishers{% endblock %}
+{% block topbar_title %}Publishers{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-header-left"><h1>Publishers</h1><p>Manage book publishers.</p></div>
+  <a href="{{ url_for('admin.add_publisher') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Add Publisher</a>
+</div>
+
+<div class="card" style="max-width:840px">
+  {% if publishers %}
+  <div class="table-wrapper" style="border:none">
+    <table>
+      <thead>
+        <tr><th class="text-center" style="width:60px">ID</th><th>Name</th><th>Address</th><th>Contact</th><th class="text-center" style="width:120px">Actions</th></tr>
+      </thead>
+      <tbody>
+        {% for p in publishers %}
+        <tr>
+          <td class="text-center text-muted">{{ p.id }}</td>
+          <td class="fw-600">{{ p.name }}</td>
+          <td class="text-sm text-muted">{{ p.address or '-' }}</td>
+          <td class="text-sm text-muted">{{ p.contact or '-' }}</td>
+          <td class="text-center">
+            <a href="{{ url_for('admin.edit_publisher', publisher_id=p.id) }}" class="btn btn-outline btn-icon" title="Edit"><i class="fas fa-edit"></i></a>
+            <button class="btn btn-danger btn-icon" data-delete-form="del-pub-{{ p.id }}" data-delete-label="publisher '{{ p.name }}'" title="Delete"><i class="fas fa-trash-alt"></i></button>
+            <form id="del-pub-{{ p.id }}" action="{{ url_for('admin.delete_publisher', publisher_id=p.id) }}" method="POST" style="display:none"></form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="table-empty"><i class="fas fa-building"></i><p>No publishers yet.</p></div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block sidebar %}
+<span class="sidebar-section-label">Main</span>
+<a href="{{ url_for('librarian.dashboard') }}" class="sidebar-link">
+  <i class="fas fa-tachometer-alt"></i> Dashboard
+</a>
+
+<span class="sidebar-section-label">Books</span>
+<a href="{{ url_for('librarian.books') }}" class="sidebar-link">
+  <i class="fas fa-book"></i> Book Catalog
+</a>
+<a href="{{ url_for('librarian.issue_book') }}" class="sidebar-link">
+  <i class="fas fa-hand-holding-heart"></i> Issue Book
+</a>
+<a href="{{ url_for('librarian.return_book') }}" class="sidebar-link">
+  <i class="fas fa-undo-alt"></i> Return Book
+</a>
+
+<span class="sidebar-section-label">Records</span>
+<a href="{{ url_for('librarian.borrow_records') }}" class="sidebar-link">
+  <i class="fas fa-exchange-alt"></i> Borrow Records
+</a>
+<a href="{{ url_for('librarian.fines') }}" class="sidebar-link">
+  <i class="fas fa-file-invoice-dollar"></i> Fines
+</a>
+
+<span class="sidebar-section-label">Students</span>
+<a href="{{ url_for('librarian.students') }}" class="sidebar-link">
+  <i class="fas fa-user-graduate"></i> Students
+</a>
+
+<span class="sidebar-section-label">Account</span>
+<a href="{{ url_for('librarian.profile') }}" class="sidebar-link">
+  <i class="fas fa-user-cog"></i> My Profile
+</a>
+<a href="{{ url_for('auth.logout') }}" class="sidebar-link">
+  <i class="fas fa-sign-out-alt"></i> Logout
+</a>
+{% endblock %}

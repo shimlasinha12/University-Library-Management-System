@@ -1,0 +1,67 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Student Details{% endblock %}
+{% block topbar_title %}Student Details{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-header-left"><h1>{{ student.full_name }}</h1><p>Student account overview and borrow history.</p></div>
+  <a href="{{ url_for('admin.students') }}" class="btn btn-outline"><i class="fas fa-arrow-left"></i> Back to Students</a>
+</div>
+
+<div class="card mb-24">
+  <div class="card-header">
+    <span class="card-title">Account Information</span>
+    <span class="badge {{ 'badge-success' if student.status == 'active' else 'badge-danger' }}">{{ student.status|capitalize }}</span>
+  </div>
+  <div class="card-body">
+    <div class="form-row" style="gap:24px">
+      <div><div class="form-label" style="margin-bottom:2px">Username</div><div class="fw-600">{{ student.username }}</div></div>
+      <div><div class="form-label" style="margin-bottom:2px">Email</div><div class="fw-600">{{ student.email }}</div></div>
+    </div>
+    {% if profile %}
+    <div class="divider"></div>
+    <div class="form-row" style="gap:24px">
+      <div><div class="form-label" style="margin-bottom:2px">Student ID</div><div class="fw-600">{{ profile.student_id_no or '-' }}</div></div>
+      <div><div class="form-label" style="margin-bottom:2px">Phone</div><div class="fw-600">{{ profile.phone or '-' }}</div></div>
+    </div>
+    <div class="form-row" style="gap:24px;margin-top:16px">
+      <div><div class="form-label" style="margin-bottom:2px">Department</div><div class="fw-600">{{ profile.department or '-' }}</div></div>
+      <div><div class="form-label" style="margin-bottom:2px">Year</div><div class="fw-600">{{ profile.year or '-' }}</div></div>
+    </div>
+    <div style="margin-top:16px"><div class="form-label" style="margin-bottom:2px">Address</div><div class="fw-600">{{ profile.address or '-' }}</div></div>
+    {% endif %}
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><span class="card-title">Borrow History</span></div>
+  {% if borrows %}
+  <div class="table-wrapper" style="border:none">
+    <table>
+      <thead><tr><th>Book</th><th>Issue Date</th><th>Due Date</th><th>Return Date</th><th class="text-center">Status</th><th class="text-center">Fine</th></tr></thead>
+      <tbody>
+        {% for b in borrows %}
+        <tr class="{% if b.status == 'issued' and is_overdue(b.due_date) %}overdue-row{% endif %}">
+          <td class="fw-600">{{ b.book_title }}</td>
+          <td>{{ format_date(b.issue_date) }}</td>
+          <td {% if b.status == 'issued' and is_overdue(b.due_date) %}class="overdue-text"{% endif %}>{{ format_date(b.due_date) }}</td>
+          <td>{{ format_date(b.return_date) }}</td>
+          <td class="text-center">
+            {% if b.status == 'issued' %}<span class="badge badge-info">Issued</span>
+            {% else %}<span class="badge badge-success">Returned</span>{% endif %}
+          </td>
+          <td class="text-center">
+            {% if b.fine_amount and b.fine_amount > 0 %}<span class="overdue-text">BDT. {{ "%.2f"|format(b.fine_amount) }}</span>
+            {% else %}<span class="text-muted">-</span>{% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="table-empty"><i class="fas fa-book-reader"></i><p>This student has no borrow records.</p></div>
+  {% endif %}
+</div>
+{% endblock %}

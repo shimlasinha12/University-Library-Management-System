@@ -1,0 +1,60 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}{{ action }} Librarian{% endblock %}
+{% block topbar_title %}{{ action }} Librarian{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-header-left"><h1>{{ action }} Librarian</h1></div>
+  <a href="{{ url_for('admin.librarians') }}" class="btn btn-outline"><i class="fas fa-arrow-left"></i> Back</a>
+</div>
+
+<div style="max-width:560px">
+  <div class="card">
+    <div class="card-body">
+      <form method="POST" action="{{ url_for('admin.add_librarian') if action == 'Add' else url_for('admin.edit_librarian', user_id=librarian.id) }}">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="username">Username <span style="color:var(--danger-600)">*</span></label>
+            <input id="username" type="text" name="username" class="form-control" value="{{ form.username or '' }}" required {{ 'readonly' if action == 'Edit' else '' }} placeholder="login username">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="full_name">Full Name <span style="color:var(--danger-600)">*</span></label>
+            <input id="full_name" type="text" name="full_name" class="form-control" value="{{ form.full_name or '' }}" required placeholder="Full name">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="email">Email <span style="color:var(--danger-600)">*</span></label>
+          <input id="email" type="email" name="email" class="form-control" value="{{ form.email or '' }}" required placeholder="email@example.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="status">Status</label>
+          <select id="status" name="status" class="form-control">
+            <option value="active" {{ 'selected' if form.status != 'inactive' else '' }}>Active</option>
+            <option value="inactive" {{ 'selected' if form.status == 'inactive' else '' }}>Inactive</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="{{ 'password' if action == 'Add' else 'new_password' }}">
+            {{ 'Password' if action == 'Add' else 'New Password' }}
+            {% if action == 'Add' %}<span style="color:var(--danger-600)">*</span>{% endif %}
+          </label>
+          <input
+            id="{{ 'password' if action == 'Add' else 'new_password' }}"
+            type="password"
+            name="{{ 'password' if action == 'Add' else 'new_password' }}"
+            class="form-control"
+            {{ 'required' if action == 'Add' else '' }}
+            placeholder="{{ 'Enter password' if action == 'Add' else 'Leave blank to keep current password' }}"
+          >
+          {% if action == 'Edit' %}<div class="form-hint">Leave blank to keep the current password.</div>{% endif %}
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary"><i class="fas fa-{{ 'plus' if action == 'Add' else 'save' }}"></i> {{ action }} Librarian</button>
+          <a href="{{ url_for('admin.librarians') }}" class="btn btn-outline">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

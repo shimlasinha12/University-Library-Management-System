@@ -1,0 +1,52 @@
+{% extends "librarian/base_librarian.html" %}
+
+{% block title %}Return Book{% endblock %}
+{% block topbar_title %}Return Book{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-header-left">
+    <h1>Return Book</h1>
+    <p>Select a borrowed book to process its return.</p>
+  </div>
+</div>
+
+<div style="max-width:560px">
+  <div class="card">
+    <div class="card-body">
+      {% if not records %}
+        <div class="empty-state">
+          <div class="empty-state-icon"><i class="fas fa-check-circle"></i></div>
+          <div class="empty-state-title">No books to return</div>
+          <div class="empty-state-text">There are no currently issued books awaiting return.</div>
+          <a href="{{ url_for('librarian.issue_book') }}" class="btn btn-primary"><i class="fas fa-hand-holding-heart"></i> Issue a Book</a>
+        </div>
+      {% else %}
+      <form method="POST" action="{{ url_for('librarian.return_book') }}">
+        <div class="form-group">
+          <label class="form-label" for="record_id">Borrow Record <span style="color:var(--danger-600)">*</span></label>
+          <select id="record_id" name="record_id" class="form-control" required>
+            <option value="">— Select a record —</option>
+            {% for r in records %}
+            <option value="{{ r.id }}">
+              {{ r.book_title }} — {{ r.user_name }} (issued {{ format_date(r.issue_date) }})
+            </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="alert alert-warning" style="margin-bottom:20px">
+          <i class="fas fa-exclamation-triangle"></i>
+          <span>If the book is past its due date, a fine of <strong>BDT. 10/day</strong> will be calculated automatically.</span>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-success"><i class="fas fa-undo-alt"></i> Process Return</button>
+          <a href="{{ url_for('librarian.dashboard') }}" class="btn btn-outline">Cancel</a>
+        </div>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

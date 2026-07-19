@@ -1,0 +1,93 @@
+{% extends "librarian/base_librarian.html" %}
+
+{% block title %}Borrow Records{% endblock %}
+{% block topbar_title %}Borrow Records{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-header-left">
+    <h1>Borrow Records</h1>
+    <p>All book issues and returns.</p>
+  </div>
+  <div class="d-flex align-center gap-8 flex-wrap">
+    <form class="search-form" method="GET" action="{{ url_for('librarian.borrow_records') }}">
+      <div class="search-input-wrap">
+        <i class="fas fa-search"></i>
+        <input type="text" name="q" class="search-input" placeholder="Search book or student..." value="{{ query }}">
+      </div>
+      <input type="hidden" name="status" value="{{ status_filter }}">
+      <button type="submit" class="btn btn-outline">Search</button>
+    </form>
+    <select class="form-control" style="width:auto" onchange="window.location.href=this.value">
+      <option value="{{ url_for('librarian.borrow_records', q=query) }}" {{ 'selected' if not status_filter else '' }}>All Status</option>
+      <option value="{{ url_for('librarian.borrow_records', status='issued', q=query) }}" {{ 'selected' if status_filter == 'issued' else '' }}>Issued</option>
+      <option value="{{ url_for('librarian.borrow_records', status='returned', q=query) }}" {{ 'selected' if status_filter == 'returned' else '' }}>Returned</option>
+    </select>
+  </div>
+</div>
+
+<div class="card">
+  {% if records %}
+  <div class="table-wrapper" style="border:none">
+    <table>
+      <thead>
+        <tr>
+          <th>Book</th>
+          <th>Student</th>
+          <th>Issue Date</th>
+          <th>Due Date</th>
+          <th>Return Date</th>
+          <th class="text-center">Status</th>
+          <th class="text-center">Fine</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in records %}
+        <tr class="{% if r.status == 'issued' and is_overdue(r.due_date) %}overdue-row{% endif %}">
+          <td class="fw-600">{{ r.book_title }}</td>
+          <td>{{ r.user_name }} <span class="text-muted text-xs">({{ r.username }})</span></td>
+          <td>{{ format_date(r.issue_date) }}</td>
+          <td {% if r.status == 'issued' and is_overdue(r.due_date) %}class="overdue-text"{% endif %}>{{ format_date(r.due_date) }}</td>
+          <td>{{ format_date(r.return_date) }}</td>
+          <td class="text-center">
+            {% if r.status == 'issued' %}
+              <span class="badge badge-info">Issued</span>
+            {% else %}
+              <span class="badge badge-success">Returned</span>
+            {% endif %}
+          </td>
+          <td class="text-center">
+            {% if r.fine_amount and r.fine_amount > 0 %}
+              <span class="overdue-text">Rs. {{ "%.2f"|format(r.fine_amount) }}</span>
+            {% else %}
+              <span class="text-muted">-</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="card-footer d-flex justify-between align-center">
+    <span class="text-sm text-muted">Page {{ page }} of {{ total_pages }}</span>
+    <div class="pagination">
+      {% if page > 1 %}
+        <a class="page-btn" href="{{ url_for('librarian.borrow_records', page=page-1, q=query, status=status_filter) }}"><i class="fas fa-chevron-left"></i></a>
+      {% else %}
+        <span class="page-btn disabled"><i class="fas fa-chevron-left"></i></span>
+      {% endif %}
+      {% if page < total_pages %}
+        <a class="page-btn" href="{{ url_for('librarian.borrow_records', page=page+1, q=query, status=status_filter) }}"><i class="fas fa-chevron-right"></i></a>
+      {% else %}
+        <span class="page-btn disabled"><i class="fas fa-chevron-right"></i></span>
+      {% endif %}
+    </div>
+  </div>
+  {% else %}
+  <div class="table-empty">
+    <i class="fas fa-exchange-alt"></i>
+    <p>No borrow records found.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

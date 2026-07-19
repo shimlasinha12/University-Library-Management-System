@@ -1,0 +1,44 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Borrow History Report{% endblock %}
+{% block topbar_title %}Borrow History Report{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-header-left"><h1>Borrow History Report</h1><p>Complete record of all book issues and returns.</p></div>
+  <button onclick="window.print()" class="btn btn-outline"><i class="fas fa-print"></i> Print</button>
+</div>
+
+<div class="card">
+  {% if records %}
+  <div class="table-wrapper" style="border:none">
+    <table>
+      <thead><tr><th>Book</th><th>ISBN</th><th>User</th><th>Role</th><th>Issue Date</th><th>Due Date</th><th>Return Date</th><th class="text-center">Status</th><th class="text-center">Fine</th></tr></thead>
+      <tbody>
+        {% for r in records %}
+        <tr class="{% if r.status == 'issued' and is_overdue(r.due_date) %}overdue-row{% endif %}">
+          <td class="fw-600">{{ r.book_title }}</td>
+          <td class="text-sm text-muted">{{ r.book_isbn }}</td>
+          <td>{{ r.user_name }}</td>
+          <td><span class="badge badge-gray">{{ r.user_role }}</span></td>
+          <td>{{ format_date(r.issue_date) }}</td>
+          <td {% if r.status == 'issued' and is_overdue(r.due_date) %}class="overdue-text"{% endif %}>{{ format_date(r.due_date) }}</td>
+          <td>{{ format_date(r.return_date) }}</td>
+          <td class="text-center">
+            {% if r.status == 'issued' %}<span class="badge badge-info">Issued</span>
+            {% else %}<span class="badge badge-success">Returned</span>{% endif %}
+          </td>
+          <td class="text-center">
+            {% if r.fine_amount and r.fine_amount > 0 %}<span class="overdue-text">Rs. {{ "%.2f"|format(r.fine_amount) }}</span>
+            {% else %}<span class="text-muted">-</span>{% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="table-empty"><i class="fas fa-exchange-alt"></i><p>No borrow records found.</p></div>
+  {% endif %}
+</div>
+{% endblock %}

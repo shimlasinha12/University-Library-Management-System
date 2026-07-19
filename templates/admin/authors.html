@@ -1,0 +1,39 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Authors{% endblock %}
+{% block topbar_title %}Authors{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-header-left"><h1>Authors</h1><p>Manage book authors.</p></div>
+  <a href="{{ url_for('admin.add_author') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Add Author</a>
+</div>
+
+<div class="card" style="max-width:720px">
+  {% if authors %}
+  <div class="table-wrapper" style="border:none">
+    <table>
+      <thead>
+        <tr><th class="text-center" style="width:60px">ID</th><th>Name</th><th>Description</th><th class="text-center" style="width:120px">Actions</th></tr>
+      </thead>
+      <tbody>
+        {% for a in authors %}
+        <tr>
+          <td class="text-center text-muted">{{ a.id }}</td>
+          <td class="fw-600">{{ a.name }}</td>
+          <td class="text-sm text-muted">{{ a.description or '-' }}</td>
+          <td class="text-center">
+            <a href="{{ url_for('admin.edit_author', author_id=a.id) }}" class="btn btn-outline btn-icon" title="Edit"><i class="fas fa-edit"></i></a>
+            <button class="btn btn-danger btn-icon" data-delete-form="del-author-{{ a.id }}" data-delete-label="author '{{ a.name }}'" title="Delete"><i class="fas fa-trash-alt"></i></button>
+            <form id="del-author-{{ a.id }}" action="{{ url_for('admin.delete_author', author_id=a.id) }}" method="POST" style="display:none"></form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="table-empty"><i class="fas fa-pen-fancy"></i><p>No authors yet.</p></div>
+  {% endif %}
+</div>
+{% endblock %}

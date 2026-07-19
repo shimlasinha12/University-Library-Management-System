@@ -1,0 +1,58 @@
+{% extends "librarian/base_librarian.html" %}
+
+{% block title %}Fines{% endblock %}
+{% block topbar_title %}Fines{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-header-left">
+    <h1>Fines</h1>
+    <p>All fines charged for overdue returns.</p>
+  </div>
+  <button onclick="window.print()" class="btn btn-outline"><i class="fas fa-print"></i> Print</button>
+</div>
+
+<div class="card">
+  {% if fines %}
+  <div class="table-wrapper" style="border:none">
+    <table>
+      <thead>
+        <tr>
+          <th>Book</th>
+          <th>Student</th>
+          <th>Issue Date</th>
+          <th>Due Date</th>
+          <th>Return Date</th>
+          <th class="text-center">Fine</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for f in fines %}
+        <tr>
+          <td class="fw-600">{{ f.book_title }}</td>
+          <td>{{ f.user_name }} <span class="text-muted text-xs">({{ f.username }})</span></td>
+          <td>{{ format_date(f.issue_date) }}</td>
+          <td>{{ format_date(f.due_date) }}</td>
+          <td>{{ format_date(f.return_date) }}</td>
+          <td class="text-center">
+            <span class="overdue-text">BDT. {{ "%.2f"|format(f.fine_amount) }}</span>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr style="background:var(--gray-50);font-weight:700">
+          <td colspan="5" style="text-align:right;padding-right:20px">Total:</td>
+          <td class="text-center overdue-text">BDT. {{ "%.2f"|format(fines|sum(attribute='fine_amount')) }}</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  {% else %}
+  <div class="table-empty">
+    <i class="fas fa-file-invoice-dollar"></i>
+    <p>No fines recorded.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends "student/base_student.html" %}
+
+{% block title %}My Borrows{% endblock %}
+{% block topbar_title %}My Borrows{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-header-left">
+    <h1>My Borrows</h1>
+    <p>Your complete borrow history.</p>
+  </div>
+</div>
+
+<div class="card">
+  {% if records %}
+  <div class="table-wrapper" style="border:none">
+    <table>
+      <thead>
+        <tr>
+          <th>Book</th>
+          <th>Issue Date</th>
+          <th>Due Date</th>
+          <th>Return Date</th>
+          <th class="text-center">Status</th>
+          <th class="text-center">Fine</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in records %}
+        <tr class="{% if r.status == 'issued' and is_overdue(r.due_date) %}overdue-row{% endif %}">
+          <td class="fw-600">{{ r.book_title }}</td>
+          <td>{{ format_date(r.issue_date) }}</td>
+          <td {% if r.status == 'issued' and is_overdue(r.due_date) %}class="overdue-text"{% endif %}>{{ format_date(r.due_date) }}</td>
+          <td>{{ format_date(r.return_date) }}</td>
+          <td class="text-center">
+            {% if r.status == 'issued' %}
+              {% if is_overdue(r.due_date) %}
+                <span class="badge badge-danger">Overdue</span>
+              {% else %}
+                <span class="badge badge-info">Issued</span>
+              {% endif %}
+            {% else %}
+              <span class="badge badge-success">Returned</span>
+            {% endif %}
+          </td>
+          <td class="text-center">
+            {% if r.fine_amount and r.fine_amount > 0 %}
+              <span class="overdue-text">Rs. {{ "%.2f"|format(r.fine_amount) }}</span>
+            {% else %}
+              <span class="text-muted">-</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-state-icon"><i class="fas fa-book-reader"></i></div>
+    <div class="empty-state-title">No borrows yet</div>
+    <div class="empty-state-text">You haven't borrowed any books yet.</div>
+    <a href="{{ url_for('student.books') }}" class="btn btn-primary"><i class="fas fa-search"></i> Browse Books</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

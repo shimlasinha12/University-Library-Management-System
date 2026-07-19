@@ -1,0 +1,79 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Books{% endblock %}
+{% block topbar_title %}Book Catalog{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-header-left">
+    <h1>Books</h1>
+    <p>Manage the library's book collection.</p>
+  </div>
+  <div class="d-flex align-center gap-8 flex-wrap">
+    <form class="search-form" method="GET" action="{{ url_for('admin.books') }}">
+      <div class="search-input-wrap">
+        <i class="fas fa-search"></i>
+        <input type="text" name="q" class="search-input" placeholder="Search by title, ISBN, author..." value="{{ query }}">
+      </div>
+      <button type="submit" class="btn btn-outline">Search</button>
+    </form>
+    <a href="{{ url_for('admin.add_book') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Add Book</a>
+  </div>
+</div>
+
+<div class="card">
+  {% if books %}
+  <div class="table-wrapper" style="border:none">
+    <table>
+      <thead>
+        <tr>
+          <th>ISBN</th><th>Title</th><th>Category</th><th>Author</th><th>Publisher</th>
+          <th class="text-center">Qty</th><th class="text-center">Avail.</th><th class="text-center">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for book in books %}
+        <tr>
+          <td class="text-sm">{{ book.isbn }}</td>
+          <td class="fw-600">{{ book.title }}</td>
+          <td>{{ book.category_name or '-' }}</td>
+          <td>{{ book.author_name or '-' }}</td>
+          <td>{{ book.publisher_name or '-' }}</td>
+          <td class="text-center">{{ book.quantity }}</td>
+          <td class="text-center">
+            {% if book.available_copies > 0 %}<span class="badge badge-success">{{ book.available_copies }}</span>
+            {% else %}<span class="badge badge-danger">0</span>{% endif %}
+          </td>
+          <td class="text-center">
+            <a href="{{ url_for('admin.edit_book', book_id=book.id) }}" class="btn btn-outline btn-icon" title="Edit"><i class="fas fa-edit"></i></a>
+            <button class="btn btn-danger btn-icon" data-delete-form="del-form-{{ book.id }}" data-delete-label="the book '{{ book.title }}'" title="Delete"><i class="fas fa-trash-alt"></i></button>
+            <form id="del-form-{{ book.id }}" action="{{ url_for('admin.delete_book', book_id=book.id) }}" method="POST" style="display:none"></form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="card-footer d-flex justify-between align-center">
+    <span class="text-sm text-muted">Page {{ page }} of {{ total_pages }}</span>
+    <div class="pagination">
+      {% if page > 1 %}
+        <a class="page-btn" href="{{ url_for('admin.books', page=page-1, q=query) }}"><i class="fas fa-chevron-left"></i></a>
+      {% else %}
+        <span class="page-btn disabled"><i class="fas fa-chevron-left"></i></span>
+      {% endif %}
+      {% if page < total_pages %}
+        <a class="page-btn" href="{{ url_for('admin.books', page=page+1, q=query) }}"><i class="fas fa-chevron-right"></i></a>
+      {% else %}
+        <span class="page-btn disabled"><i class="fas fa-chevron-right"></i></span>
+      {% endif %}
+    </div>
+  </div>
+  {% else %}
+  <div class="table-empty">
+    <i class="fas fa-book"></i>
+    <p>No books found. {% if query %}Try a different search.{% else %}Click "Add Book" to get started.{% endif %}</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

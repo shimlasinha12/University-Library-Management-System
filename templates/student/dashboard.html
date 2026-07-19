@@ -1,0 +1,121 @@
+{% extends "student/base_student.html" %}
+
+{% block title %}Dashboard{% endblock %}
+{% block topbar_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-header-left">
+    <h1>Welcome, {{ session.full_name }}</h1>
+    <p>Here's your library activity overview.</p>
+  </div>
+  <a href="{{ url_for('student.books') }}" class="btn btn-primary"><i class="fas fa-search"></i> Browse Books</a>
+</div>
+
+<!-- Stat cards -->
+<div class="stat-grid">
+  <div class="stat-card">
+    <div class="stat-icon amber"><i class="fas fa-book-reader"></i></div>
+    <div>
+      <div class="stat-value">{{ current_borrows|length }}</div>
+      <div class="stat-label">Current Borrows</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon green"><i class="fas fa-undo-alt"></i></div>
+    <div>
+      <div class="stat-value">{{ borrow_history|length }}</div>
+      <div class="stat-label">Total Borrowed</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon red"><i class="fas fa-file-invoice-dollar"></i></div>
+    <div>
+      <div class="stat-value">BDT. {{ "%.2f"|format(fines|sum(attribute='fine_amount')) }}</div>
+      <div class="stat-label">Total Fines</div>
+    </div>
+  </div>
+</div>
+
+<!-- Current borrows -->
+<div class="card mb-24">
+  <div class="card-header">
+    <span class="card-title">Current Borrows</span>
+    <a href="{{ url_for('student.my_borrows') }}" class="btn btn-outline btn-sm">View All <i class="fas fa-arrow-right"></i></a>
+  </div>
+  {% if current_borrows %}
+  <div class="table-wrapper" style="border:none;border-radius:0">
+    <table>
+      <thead>
+        <tr>
+          <th>Book</th>
+          <th>Issue Date</th>
+          <th>Due Date</th>
+          <th class="text-center">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for b in current_borrows %}
+        <tr class="{% if is_overdue(b.due_date) %}overdue-row{% endif %}">
+          <td class="fw-600">{{ b.book_title }}</td>
+          <td>{{ format_date(b.issue_date) }}</td>
+          <td {% if is_overdue(b.due_date) %}class="overdue-text"{% endif %}>{{ format_date(b.due_date) }}</td>
+          <td class="text-center">
+            {% if is_overdue(b.due_date) %}
+              <span class="badge badge-danger">Overdue</span>
+            {% else %}
+              <span class="badge badge-info">Issued</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="table-empty">
+    <i class="fas fa-book-reader"></i>
+    <p>You have no books currently borrowed.</p>
+  </div>
+  {% endif %}
+</div>
+
+<!-- Fines summary -->
+<div class="card">
+  <div class="card-header">
+    <span class="card-title">Recent Fines</span>
+    <a href="{{ url_for('student.my_fines') }}" class="btn btn-outline btn-sm">View All <i class="fas fa-arrow-right"></i></a>
+  </div>
+  {% if fines %}
+  <div class="table-wrapper" style="border:none;border-radius:0">
+    <table>
+      <thead>
+        <tr>
+          <th>Book</th>
+          <th>Due Date</th>
+          <th>Return Date</th>
+          <th class="text-center">Fine</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for f in fines[:5] %}
+        <tr>
+          <td class="fw-600">{{ f.book_title }}</td>
+          <td>{{ format_date(f.due_date) }}</td>
+          <td>{{ format_date(f.return_date) }}</td>
+          <td class="text-center">
+            <span class="overdue-text">BDT. {{ "%.2f"|format(f.fine_amount) }}</span>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="table-empty">
+    <i class="fas fa-check-circle"></i>
+    <p>No fines recorded. Great job!</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

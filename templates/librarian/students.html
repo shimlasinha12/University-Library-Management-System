@@ -1,0 +1,55 @@
+{% extends "librarian/base_librarian.html" %}
+
+{% block title %}Students{% endblock %}
+{% block topbar_title %}Students{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-header-left">
+    <h1>Students</h1>
+    <p>View registered students and their borrow history.</p>
+  </div>
+</div>
+
+<div class="card">
+  {% if students %}
+  <div class="table-wrapper" style="border:none">
+    <table>
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Full Name</th>
+          <th>Email</th>
+          <th class="text-center">Status</th>
+          <th class="text-center" style="width:80px">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in students %}
+        <tr>
+          <td class="fw-600">{{ s.username }}</td>
+          <td>{{ s.full_name }}</td>
+          <td class="text-sm">{{ s.email }}</td>
+          <td class="text-center">
+            {% if s.status == 'active' %}
+              <span class="badge badge-success">Active</span>
+            {% else %}
+              <span class="badge badge-danger">Inactive</span>
+            {% endif %}
+          </td>
+          <td class="text-center">
+            <a href="{{ url_for('librarian.view_student', user_id=s.id) }}" class="btn btn-outline btn-icon" title="View"><i class="fas fa-eye"></i></a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="table-empty">
+    <i class="fas fa-user-graduate"></i>
+    <p>No students registered.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Librarians{% endblock %}
+{% block topbar_title %}Librarians{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-header-left"><h1>Librarians</h1><p>Manage librarian accounts.</p></div>
+  <a href="{{ url_for('admin.add_librarian') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Add Librarian</a>
+</div>
+
+<div class="card">
+  {% if librarians %}
+  <div class="table-wrapper" style="border:none">
+    <table>
+      <thead>
+        <tr><th>Username</th><th>Full Name</th><th>Email</th><th class="text-center">Status</th><th class="text-center" style="width:120px">Actions</th></tr>
+      </thead>
+      <tbody>
+        {% for l in librarians %}
+        <tr>
+          <td class="fw-600">{{ l.username }}</td>
+          <td>{{ l.full_name }}</td>
+          <td class="text-sm">{{ l.email }}</td>
+          <td class="text-center">
+            {% if l.status == 'active' %}<span class="badge badge-success">Active</span>
+            {% else %}<span class="badge badge-danger">Inactive</span>{% endif %}
+          </td>
+          <td class="text-center">
+            <a href="{{ url_for('admin.edit_librarian', user_id=l.id) }}" class="btn btn-outline btn-icon" title="Edit"><i class="fas fa-edit"></i></a>
+            <button class="btn btn-danger btn-icon" data-delete-form="del-lib-{{ l.id }}" data-delete-label="librarian '{{ l.username }}'" title="Delete"><i class="fas fa-trash-alt"></i></button>
+            <form id="del-lib-{{ l.id }}" action="{{ url_for('admin.delete_librarian', user_id=l.id) }}" method="POST" style="display:none"></form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="table-empty"><i class="fas fa-user-tie"></i><p>No librarians yet. Click "Add Librarian" to get started.</p></div>
+  {% endif %}
+</div>
+{% endblock %}

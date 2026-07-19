@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block sidebar %}
+<span class="sidebar-section-label">Main</span>
+<a href="{{ url_for('admin.dashboard') }}" class="sidebar-link">
+  <i class="fas fa-tachometer-alt"></i> Dashboard
+</a>
+
+<span class="sidebar-section-label">Catalog</span>
+<a href="{{ url_for('admin.books') }}" class="sidebar-link">
+  <i class="fas fa-book"></i> Books
+</a>
+<a href="{{ url_for('admin.categories') }}" class="sidebar-link">
+  <i class="fas fa-tags"></i> Categories
+</a>
+<a href="{{ url_for('admin.authors') }}" class="sidebar-link">
+  <i class="fas fa-pen-fancy"></i> Authors
+</a>
+<a href="{{ url_for('admin.publishers') }}" class="sidebar-link">
+  <i class="fas fa-building"></i> Publishers
+</a>
+
+<span class="sidebar-section-label">Users</span>
+<a href="{{ url_for('admin.librarians') }}" class="sidebar-link">
+  <i class="fas fa-user-tie"></i> Librarians
+</a>
+<a href="{{ url_for('admin.students') }}" class="sidebar-link">
+  <i class="fas fa-user-graduate"></i> Students
+</a>
+
+<span class="sidebar-section-label">Reports</span>
+<a href="{{ url_for('admin.report_books') }}" class="sidebar-link">
+  <i class="fas fa-clipboard-list"></i> Book Report
+</a>
+<a href="{{ url_for('admin.report_borrows') }}" class="sidebar-link">
+  <i class="fas fa-exchange-alt"></i> Borrow History
+</a>
+<a href="{{ url_for('admin.report_fines') }}" class="sidebar-link">
+  <i class="fas fa-file-invoice-dollar"></i> Fine Report
+</a>
+
+<span class="sidebar-section-label">Account</span>
+<a href="{{ url_for('admin.profile') }}" class="sidebar-link">
+  <i class="fas fa-user-cog"></i> My Profile
+</a>
+<a href="{{ url_for('auth.logout') }}" class="sidebar-link">
+  <i class="fas fa-sign-out-alt"></i> Logout
+</a>
+{% endblock %}
