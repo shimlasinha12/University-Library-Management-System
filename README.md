@@ -219,7 +219,8 @@ Add screenshots of:
 ## 👨‍💻 Developed By
 
 **Shimla Sinha**<br>
-**Bishakha Chanda**
+**Bishakha Chanda**<br>
+Github : https://github.com/bishakhachanda00
 
 Department of Computer Science & Engineering
 
