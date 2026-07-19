@@ -1,102 +1,122 @@
-# University Library Management System
+# 📚 University Library Management System
 
-A complete web-based library management system built with **Flask**, **MySQL**, and server-rendered **Jinja2** templates. It supports three roles — Admin, Librarian, and Student — each with their own dashboard, sidebar navigation, and feature set.
+A modern, secure, and responsive web-based Library Management System developed using **Flask** and **MySQL**. The system streamlines academic library operations by providing dedicated dashboards and role-based access for **Administrators, Librarians, and Students**.
 
-## Features
+## 📖 Overview
 
-### Admin
-- Dashboard with aggregate statistics (books, copies, issued, returned, students, librarians, fines)
-- Full CRUD for Books, Categories, Authors, Publishers
-- Manage librarian accounts (add, edit, delete, activate/deactivate)
-- View and delete student accounts
-- View individual student profiles with borrow history
-- Three reports: Book Report, Borrow History, Fine Report (printable)
-- Edit own profile and password
+The University Library Management System is designed to automate and simplify day-to-day library operations. It provides an intuitive interface for managing books, users, borrowing records, overdue fines, and reports while maintaining data integrity through secure authentication and role-based authorization.
 
-### Librarian
-- Dashboard with library statistics and recent activity
-- Browse and search the book catalog (read-only)
-- Issue books to students (with 14-day borrowing period and duplicate-borrow guard)
-- Process book returns (auto-calculates overdue fines at Rs. 10/day)
-- View all borrow records with search and status filter (issued/returned)
-- View all fines with total
-- View student list and individual student profiles
-- Edit own profile and password
+This project follows a clean MVC-inspired architecture using Flask Blueprints, making the application modular, scalable, and easy to maintain.
 
-### Student
-- Self-registration with student profile (Student ID, phone, department, year, address)
-- Dashboard showing current borrows, total borrowed, and total fines
-- Browse and search the library catalog (card layout with availability)
-- View complete borrow history with overdue indicators
-- View all fines with total outstanding
-- Edit profile and password
+## ✨ Key Features
 
-## Default Login
+### 👨‍💼 Administrator
 
-| Role     | Username | Password    |
-|----------|----------|-------------|
-| Admin    | admin    | Admin@123   |
+- Secure authentication
+- Interactive dashboard with library statistics
+- Complete Book Management (CRUD)
+- Category Management
+- Author Management
+- Publisher Management
+- Manage Librarian Accounts
+- Manage Student Accounts
+- View Student Profiles
+- Borrow History Management
+- Book Report
+- Fine Report
+- Printable Reports
+- Profile & Password Management
 
-Librarian and student accounts are created through the admin panel or student registration page.
+### 📚 Librarian
 
-## Tech Stack
+- Secure Login
+- Dashboard with Recent Activities
+- Search Books
+- Issue Books
+- Return Books
+- Automatic Fine Calculation
+- Borrow Record Management
+- Student Search
+- Student Profile View
+- Fine Management
+- Profile Update
 
-- **Backend:** Flask 3.0.3
-- **Database:** MySQL (via mysql-connector-python)
-- **Auth:** Werkzeug password hashing (generate_password_hash / check_password_hash)
-- **Templates:** Jinja2 with a custom CSS design system (Inter font, Font Awesome icons)
-- **Session:** Flask server-side sessions
+### 🎓 Student
 
-## Project Structure
+- Student Registration
+- Secure Login
+- Personal Dashboard
+- Browse Library Catalog
+- Advanced Book Search
+- View Available Books
+- Borrow History
+- Fine History
+- Update Profile
+- Change Password
+
+## 🔐 Authentication & Security
+
+- Role-Based Access Control
+- Secure Password Hashing
+- Session Management
+- Protected Routes using Middleware
+- Input Validation
+- Duplicate Borrow Prevention
+- Error Handling
+- Authentication Middleware
+
+## 📊 Reporting System
+
+The system includes built-in printable reports for:
+
+- 📚 Book Report
+- 📖 Borrow History Report
+- 💰 Fine Report
+
+## ⚙️ Technology Stack
+
+| Category | Technology |
+|-----------|------------|
+| Backend | Flask 3 |
+| Database | MySQL |
+| Frontend | HTML5, CSS3, JavaScript |
+| Template Engine | Jinja2 |
+| Authentication | Werkzeug Password Hashing |
+| Database Driver | mysql-connector-python |
+| Icons | Font Awesome |
+
+## 🏗️ Project Architecture
 
 ```
 project/
-|-- app.py                      # Flask app entry point
-|-- config/config.py            # App configuration (DB, secret key, fine/borrow settings)
-|-- database/db_config.py       # MySQL connection factory
-|-- library_management.sql      # Database schema + default admin account
-|-- middleware/auth_middleware.py  # @login_required, @role_required decorators
-|-- models/                     # Data access layer (one file per entity)
-|   |-- user_model.py
-|   |-- book_model.py
-|   |-- borrow_model.py
-|   |-- category_model.py
-|   |-- author_model.py
-|   |-- publisher_model.py
-|   |-- report_model.py
-|-- routes/                     # Flask Blueprints (one per role + auth)
-|   |-- auth_routes.py
-|   |-- admin_routes.py
-|   |-- librarian_routes.py
-|   |-- student_routes.py
-|-- templates/                  # Jinja2 templates
-|   |-- base.html               # Master layout (sidebar, topbar, flash, modal)
-|   |-- auth/login.html
-|   |-- admin/                  # 19 admin templates
-|   |-- librarian/              # 9 librarian templates
-|   |-- student/                # 7 student templates
-|   |-- errors/404.html, 500.html
-|-- static/
-|   |-- css/main.css            # Full design system (~900 lines)
-|   |-- js/main.js              # Sidebar toggle, alerts, delete modal, password toggle
-|-- utils/helpers.py            # Validation, pagination, date formatting
+│
+├── app.py
+├── config/
+├── controllers/
+├── database/
+├── middleware/
+├── models/
+├── routes/
+├── static/
+├── templates/
+├── utils/
+├── requirements.txt
+└── library_management.sql
 ```
 
-## Setup
+The project follows a modular architecture where each component is separated into dedicated folders for better maintainability and scalability.
 
-### 1. Database
+## 🚀 Installation
 
-Import the schema file into MySQL:
+### Install Dependencies
 
 ```bash
-mysql -u root -p < library_management.sql
+pip install -r requirements.txt
 ```
 
-This creates the `library_management` database with all tables and the default admin account.
+### Configure Environment
 
-### 2. Environment
-
-Copy `.env.example` to `.env` and update the values:
+Create a `.env` file and update the database configuration.
 
 ```
 DB_HOST=localhost
@@ -107,33 +127,102 @@ DB_PASSWORD=your_password
 SECRET_KEY=your_secret_key
 ```
 
-### 3. Install Dependencies
+### Import Database
 
-```bash
-pip install -r requirements.txt
+Import
+
+```
+library_management.sql
 ```
 
-### 4. Run the Application
+into MySQL.
+
+### Run the Application
 
 ```bash
 python app.py
 ```
 
-The application starts on `http://localhost:5000`.
+Open your browser:
 
-## Configuration
+```
+http://127.0.0.1:5000
+```
 
-Editable in `config/config.py`:
 
-| Setting        | Default | Description                          |
-|----------------|---------|--------------------------------------|
-| FINE_PER_DAY   | 10      | Fine amount per overdue day (Rs.)    |
-| BORROW_DAYS    | 14      | Default borrowing period in days     |
-| SECRET_KEY     | -       | Flask session secret (from .env)     |
+## 👤 Default Administrator Account
 
-## Security
+| Username | Password |
+|----------|----------|
+| admin | Admin@123 |
 
-- Passwords stored as Werkzeug hashes (never plaintext)
-- Role-based access control via `@role_required` decorator on every route
-- Session-based authentication
-- SQL injection prevention via parameterized queries throughout the model layer
+## 📸 Screenshots
+
+Add screenshots of:
+
+- Home Page
+- Login Page
+- Admin Dashboard
+- Librarian Dashboard
+- Student Dashboard
+- Book Management
+- Issue Book
+- Borrow History
+- Reports
+
+---
+
+## 🌟 Highlights
+
+- Modern Responsive UI
+- Role-Based Dashboard
+- Modular Flask Architecture
+- Secure Authentication
+- Automatic Fine Calculation
+- Printable Reports
+- MVC-inspired Structure
+- Easy to Maintain
+- Scalable Codebase
+
+---
+
+## 🎯 Future Enhancements
+
+- Email Notifications
+- QR Code / Barcode Integration
+- Book Reservation System
+- Email Verification
+- PDF Report Export
+- Dark Mode
+- REST API Support
+- Docker Deployment
+
+---
+
+# Screenshot
+
+## Login Page
+![Login Page](./Screenshot/Login.png)
+
+## Create account Page
+![Create account Page](./Screenshot/Createaccount.png)
+
+## Admin portal
+![Admin portal](./Screenshot/Adminportal.png)
+
+## Librarian portal
+![Librarian portal](./Screenshot/Librarianportal.png)
+
+## Student portal
+![Student portal](./Screenshot/Studentportal.png)
+
+## 👨‍💻 Developed By
+
+**Shimla Sinha**<br>
+**Bishakha Chanda**
+
+Department of Computer Science & Engineering
+
+**Metropolitan University, Bangladesh**
+
+---
