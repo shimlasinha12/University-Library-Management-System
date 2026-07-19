@@ -1,6 +1,6 @@
 # 📚 University Library Management System
 
-A modern, secure, and responsive web-based Library Management System developed using **Flask** and **MySQL**. The system streamlines academic library operations by providing dedicated dashboards and role-based access for **Administrators, Librarians, and Students**.
+A modern, secure and responsive web-based Library Management System developed using **Flask** and **MySQL**. The system streamlines academic library operations by providing dedicated dashboards and role-based access for **Administrators, Librarians, and Students**.
 
 ## 📖 Overview
 
